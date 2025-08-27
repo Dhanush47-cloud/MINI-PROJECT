@@ -6,7 +6,7 @@ Patients can log in, enter symptoms, get classified into departments, and doctor
 Doctors provide digital prescriptions accessible to both patients and pharmacies.
 A chatbot assists with queries, reminders, diet, and exercise suggestions.
 
-🎯 Features
+## 🎯 Features
 
 Patient login & symptom entry
 
@@ -18,7 +18,7 @@ Digital prescriptions for pharmacy
 
 Chatbot for assistance & reminders
 
-🛠️ Tech Stack
+## 🛠️ Tech Stack
 
 Frontend: HTML, CSS, JavaScript (or React.js)
 
