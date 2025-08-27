@@ -29,3 +29,4 @@ Database: Firebase / MySQL
 AI/NLP: Google Dialogflow
 
 Hosting: Firebase / Vercel / Render
+..........................................
