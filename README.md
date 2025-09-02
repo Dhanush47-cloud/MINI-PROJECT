@@ -1,5 +1,5 @@
 # 🚑 MediAssist AI – AI Receptionist for Healthcare
-## 📌 Project Overview cc
+## 📌 Project Overview ccccc
 
 MediAssist AI is an intelligent receptionist app that helps hospitals manage patients efficiently.  
 Patients can log in, enter symptoms, get classified into departments, and doctors are notified instantly.
