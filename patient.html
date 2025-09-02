@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">    
+<head>    
+  <meta charset="UTF-8">    
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">    
+  <title>Register - Mediyos</title>    
+  <link rel="stylesheet" href="style.css">    
+</head>    
+<body>    
+  <!-- Header -->
+  <header>    
+    <h2>MEDIYOS</h2>    
+   
+   <div class="auth-buttons">
+  <button class="btn register" onclick="openRegister()">REGISTER</button>
+  <button class="btn login" onclick="openLogin()">LOGIN</button>
+</div>
+	
+  </header>    
+
+  <!-- Container with forms -->
+  <div class="container">    
+    <div class="tabs">    
+      <button class="tab active" onclick="showForm('patient')">Patient</button>    
+      <button class="tab" onclick="showForm('doctor')">Doctor</button>    
+      <button class="tab" onclick="showForm('pharmacy')">Pharmacy</button>    
+    </div>  
+
+    <!-- Patient Form -->    
+    <form id="patientForm" class="form active">    
+      <h3>Patient Register</h3>    
+      <input type="text" placeholder="First Name" required>    
+      <input type="text" placeholder="Last Name" required>    
+      <input type="text" placeholder="Mobile Number" required>    
+      <input type="password" placeholder="Password" required>    
+      <input type="password" placeholder="Confirm Password" required>    
+      <button type="submit">LOGIN</button>    
+    </form>    
+
+    <!-- Doctor Form -->    
+    <form id="doctorForm" class="form">    
+      <h3>Doctor Register</h3>    
+      <input type="text" placeholder="Full Name" required>    
+      <input type="text" placeholder="Specialization" required>    
+      <input type="text" placeholder="Mobile Number" required>    
+      <input type="password" placeholder="Password" required>
+	   <input type="password" placeholder="Confirm Password" required> 
+      <button type="submit">LOGIN</button>    
+    </form>    
+
+    <!-- Pharmacy Form -->    
+    <form id="pharmacyForm" class="form">    
+      <h3>Pharmacy Register</h3>    
+      <input type="text" placeholder="Pharmacy Name" required>    
+      <input type="text" placeholder="License No" required>    
+      <input type="text" placeholder="Mobile Number" required>    
+      <input type="password" placeholder="Password" required> 
+      <input type="password" placeholder="Confirm Password" required> 	  
+      <button type="submit">LOGIN</button>    
+    </form>  
+	
+  </div>    
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-container">
+    
+      <div class="footer-section">
+        <h3>Contact Us</h3>
+        <p>📍 Location</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>  
+</body>    
+</html>
