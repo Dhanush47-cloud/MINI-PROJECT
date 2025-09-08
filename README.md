@@ -4,7 +4,7 @@
 MediAssist AI is an intelligent receptionist app that helps hospitals manage patients efficiently.  
 Patients can log in, enter symptoms, get classified into departments, and doctors are notified instantly.
 Doctors provide digital prescriptions accessible to both patients and pharmacies.
-A chatbot assists with queries, reminders, diet, and exercise suggestions.
+A chatbot assists with queries, reminders, diet, and exercise suggestions.             
 
 ## 🎯 Features
 
