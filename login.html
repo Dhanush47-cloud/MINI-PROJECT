@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>AI Receptionist - Authentication</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: url('login.png') no-repeat center center fixed;
+      background-size: cover;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      background: rgba(255,255,255,0.9);
+      padding: 25px;
+      border-radius: 12px;
+      width: 360px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+    h2 { text-align: center; margin-bottom: 15px; }
+    .tabs { display: flex; justify-content: space-between; margin-bottom: 20px; }
+    .tabs button {
+      flex: 1; margin: 0 3px; padding: 10px;
+      border: none; border-radius: 6px;
+      background: #ddd; cursor: pointer;
+    }
+    .tabs button.active { background: #007bff; color: white; font-weight: bold; }
+    label { font-size: 14px; margin-top: 10px; display: block; }
+    input {
+      width: 100%; padding: 10px; margin-top: 5px;
+      border: 1px solid #ccc; border-radius: 6px;
+    }
+    button.action {
+      width: 100%; margin-top: 15px; padding: 10px;
+      background: #007bff; border: none; border-radius: 6px;
+      color: white; font-weight: bold; cursor: pointer;
+    }
+    button.action:hover { background: #0056b3; }
+    .hint { font-size: 13px; color: #666; margin-top: 8px; }
+    .err { color: red; font-size: 13px; margin-top: 8px; }
+    .success { color: green; font-size: 13px; margin-top: 8px; }
+    #dashboard { display:none; text-align:center; }
+  </style>
+</head>
+<body>
+  <div class="container" id="authBox">
+    <h2>AI Receptionist</h2>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="active" onclick="switchTab('patient')">Patient</button>
+      <button onclick="switchTab('doctor')">Doctor</button>
+      <button onclick="switchTab('pharmacy')">Pharmacy</button>
+    </div>
+
+    <!-- PATIENT REGISTER -->
+    <div id="patientForm">
+      <label>Full Name</label>
+      <input type="text" id="p_name" placeholder="John Doe" />
+      <label>DOB</label>
+      <input type="date" id="p_dob" />
+      <label>Email</label>
+      <input type="email" id="p_email" placeholder="example@email.com" />
+      <label>Password</label>
+      <input type="password" id="p_pass" placeholder="**" />
+      <button class="action" onclick="registerPatient()">Register (Patient)</button>
+      <div class="hint">Already registered? <span style="color:#007bff; cursor:pointer;" onclick="showLogin('patient')">Login</span></div>
+      <div id="p_note"></div>
+    </div>
+
+    <!-- PATIENT LOGIN -->
+    <div id="patientLogin" style="display:none;">
+      <label>Email</label>
+      <input type="email" id="pl_email" placeholder="example@email.com" />
+      <label>Password</label>
+      <input type="password" id="pl_pass" placeholder="**" />
+      <button class="action" onclick="loginUser('patient')">Login (Patient)</button>
+      <div id="pl_note"></div>
+    </div>
+
+    <!-- DOCTOR LOGIN -->
+    <div id="doctorForm" style="display:none;">
+      <label>Email</label>
+      <input type="email" id="d_email" placeholder="doctor@email.com" />
+      <label>Password</label>
+      <input type="password" id="d_pass" placeholder="**" />
+      <button class="action" onclick="loginUser('doctor')">Login (Doctor)</button>
+      <div id="d_note"></div>
+    </div>
+
+    <!-- PHARMACY LOGIN -->
+    <div id="pharmacyForm" style="display:none;">
+      <label>Email</label>
+      <input type="email" id="ph_email" placeholder="pharmacy@email.com" />
+      <label>Password</label>
+      <input type="password" id="ph_pass" placeholder="**" />
+      <button class="action" onclick="loginUser('pharmacy')">Login (Pharmacy)</button>
+      <div id="ph_note"></div>
+    </div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div id="dashboard">
+    <h2>Welcome 👋</h2>
+    <p>You are logged in as <b id="who"></b></p>
+    <button class="action" onclick="logout()">Logout</button>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import {
+      getAuth,
+      createUserWithEmailAndPassword,
+      signInWithEmailAndPassword,
+      sendEmailVerification,
+      signOut,
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import {
+      getFirestore,
+      setDoc,
+      doc,
+      serverTimestamp,
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAouRcoDjAVMNZmUkePlzNxUHD6DXxbxco",
+      authDomain: "meditech-83cbc.firebaseapp.com",
+      projectId: "meditech-83cbc",
+      storageBucket: "meditech-83cbc.appspot.com",
+      messagingSenderId: "687068515209",
+      appId: "1:687068515209:web:c4d007ce8abfc4fcb76f58",
+      measurementId: "G-3RY3F1152F",
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // Switch Tabs
+    window.switchTab = function(tab) {
+      document.querySelectorAll("#patientForm,#patientLogin,#doctorForm,#pharmacyForm")
+        .forEach(div => div.style.display = "none");
+      document.querySelectorAll(".tabs button").forEach(btn => btn.classList.remove("active"));
+
+      if (tab === "patient") {
+        document.querySelector(".tabs button:nth-child(1)").classList.add("active");
+        document.getElementById("patientLogin").style.display = "none";
+        document.getElementById("patientForm").style.display = "block";
+      }
+      if (tab === "doctor") {
+        document.querySelector(".tabs button:nth-child(2)").classList.add("active");
+        document.getElementById("doctorForm").style.display = "block";
+      }
+      if (tab === "pharmacy") {
+        document.querySelector(".tabs button:nth-child(3)").classList.add("active");
+        document.getElementById("pharmacyForm").style.display = "block";
+      }
+    };
+
+    window.showLogin = function(role) {
+      if (role === "patient") {
+        document.getElementById("patientForm").style.display = "none";
+        document.getElementById("patientLogin").style.display = "block";
+      }
+    };
+
+    // Patient Registration
+    window.registerPatient = async function () {
+      const name = document.getElementById("p_name").value.trim();
+      const dob = document.getElementById("p_dob").value;
+      const email = document.getElementById("p_email").value.trim();
+      const pass = document.getElementById("p_pass").value;
+      const note = document.getElementById("p_note");
+
+      if (!name || !dob || !email || !pass) {
+        note.innerHTML = "<p class='err'>Fill all fields</p>";
+        return;
+      }
+
+      try {
+        const cred = await createUserWithEmailAndPassword(auth, email, pass);
+        await setDoc(doc(db, "patients", cred.user.uid), {
+          role: "patient", name, dob, email,
+          createdAt: serverTimestamp(),
+        });
+        await sendEmailVerification(cred.user);
+        note.innerHTML = "<p class='success'>Registered! Please verify your email before login.</p>";
+      } catch (e) {
+        note.innerHTML = "<p class='err'>" + e.message + "</p>";
+      }
+    };
+
+    // Login for all roles
+    window.loginUser = async function(role) {
+      let email, pass, note;
+
+      if (role === "patient") {
+        email = document.getElementById("pl_email").value.trim();
+        pass = document.getElementById("pl_pass").value;
+        note = document.getElementById("pl_note");
+      }
+      if (role === "doctor") {
+        email = document.getElementById("d_email").value.trim();
+        pass = document.getElementById("d_pass").value;
+        note = document.getElementById("d_note");
+      }
+      if (role === "pharmacy") {
+        email = document.getElementById("ph_email").value.trim();
+        pass = document.getElementById("ph_pass").value;
+        note = document.getElementById("ph_note");
+      }
+
+      try {
+        const cred = await signInWithEmailAndPassword(auth, email, pass);
+        await cred.user.reload();
+
+        if (role === "patient") {
+          if (!cred.user.emailVerified) {
+            note.innerHTML = "<p class='err'>Please verify your email before login.</p>";
+            await signOut(auth);
+            return;
+          }
+          // go to patient dashboard page
+          window.location.href = "patient-dashboard.html";
+          return;
+        }
+
+        // doctor / pharmacy → always send verification mail
+        await sendEmailVerification(cred.user);
+        note.innerHTML = "<p class='err'>Verification email sent. Verify before login.</p>";
+        await signOut(auth);
+      } catch (e) {
+        note.innerHTML = "<p class='err'>" + e.message + "</p>";
+      }
+    };
+
+    // Logout
+    window.logout = async function () {
+      await signOut(auth);
+      document.getElementById("dashboard").style.display = "none";
+      document.getElementById("authBox").style.display = "block";
+      switchTab("patient");
+    };
+
+    window.onload = () => { switchTab("patient"); };
+  </script>
+</body>
+</html>
