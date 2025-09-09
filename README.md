@@ -15,7 +15,7 @@ Symptom classification (General → System-specific → Psychological)
 Doctor notifications
 
 Digital prescriptions for pharmacy
-
+                                                                  
 Chatbot for assistance & reminders
 
 ## 🛠️ Tech Stack
