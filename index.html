@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Healthcare - Compassionate Care</title>
+    <link rel="stylesheet" href="styl.css">
+    <style>
+        /* Home Page Specific Styles */
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://via.placeholder.com/1500x600/007bff/ffffff?text=Modern+Healthcare+Facility') no-repeat center center/cover;
+            color: white;
+            text-align: center;
+            padding: 100px 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 400px;
+        }
+
+        .hero h1 {
+            font-size: 3.5em;
+            margin-bottom: 15px;
+            max-width: 800px;
+        }
+
+        .hero p {
+            font-size: 1.4em;
+            margin-bottom: 30px;
+            max-width: 700px;
+            line-height: 1.5;
+        }
+
+        .hero .btn-hero {
+            background-color: #28a745; /* Green */
+            color: white;
+            padding: 15px 30px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 1.2em;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+
+        .hero .btn-hero:hover {
+            background-color: #218838;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5em;
+            color: #007bff;
+            margin: 60px 0 40px;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .service-item {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .service-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+        }
+
+        .service-item .icon {
+            font-size: 3em;
+            color: #007bff;
+            margin-bottom: 15px;
+        }
+
+        .service-item h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .about-section {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+
+        .about-image {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .about-image img {
+            max-width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .about-content {
+            flex: 2;
+            min-width: 300px;
+        }
+
+        .about-content h2 {
+            font-size: 2em;
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+
+        .about-content p {
+            margin-bottom: 15px;
+            color: #555;
+        }
+
+        .btn-learn-more {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+        .btn-learn-more:hover {
+            background-color: #0056b3;
+        }
+		header .logo {
+    float: left;
+}
+
+    </style>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+           
+
+<a href="index.html" class="logo" style="display:flex; align-items:center; gap:10px; text-decoration:none;">
+    <img src="logo.webp" alt="MediTech Logo" style="height:70px;">
+    <span style="font-size:1.5em; font-weight:bold; color:#007bff;">MediTech</span>
+</a> 
+
+   
+
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="services.html">Services</a></li>
+                    <li><a href="doctors.html">Doctors</a></li>
+                    <li><a href="about-us.html">About Us</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+            <div class="auth-buttons">
+                <a href="registerr
+				.html" class="btn btn-secondary">Register</a>
+                <a href="login.html" class="btn btn-primary">Login</a>
+            </div>
+        </div>
+    </header>
+<div class="slideshow">
+  <img src="OIP1.jpg" alt="">
+  <img src="OIP.jpg" alt="">
+  <img src="OIP2.jpg" alt="">
+  <img src="OIP1.jpg" alt="">
+</div>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <h1>Compassionate Care for a Healthier You</h1>
+                <p>Leading healthcare providers committed to your well-being with advanced treatments and personalized attention.</p>
+                <a href="services.html" class="btn-hero">Book an Appointment</a> <!-- Updated to go to services -->
+            </div>
+        </section>
+
+        <section class="container">
+            <h2 class="section-title">Our Specialized Services</h2>
+            <div class="services-grid">
+                <div class="service-item">
+                    <div class="icon"><i class="fas fa-heartbeat"></i></div>
+                    <h3>Cardiology</h3>
+                    <p>Expert care for heart conditions, including diagnostics and treatment.</p>
+                </div>
+                <div class="service-item">
+                    <div class="icon"><i class="fas fa-brain"></i></div>
+                    <h3>Neurology</h3>
+                    <p>Comprehensive solutions for neurological disorders and brain health.</p>
+                </div>
+                <div class="service-item">
+                    <div class="icon"><i class="fas fa-bone"></i></div>
+                    <h3>Orthopedics</h3>
+                    <p>Specialized treatment for bone, joint, and muscle injuries.</p>
+                </div>
+                <div class="service-item">
+                    <div class="icon"><i class="fas fa-child"></i></div>
+                    <h3>Pediatrics</h3>
+                    <p>Dedicated medical care for infants, children, and adolescents.</p>
+					
+                </div>
+				<div class="service-item">
+               <div class="icon"><i class="fas fa-user-md"></i></div>
+               <h3>Dermatology</h3>
+             <p>Expert solutions for skin, hair, and nail conditions.</p>
+             </div>
+			 <div class="service-item">
+             <div class="icon"><i class="fas fa-eye"></i></div>
+            <h3>Ophthalmology</h3>
+           <p>Specialized eye care, vision correction, and eye surgery.</p>
+          </div>
+            </div>
+        </section>
+
+        <section class="container about-section">
+            <div class="about-image">
+                <img src="about.jpg" alt="Doctor and Patient">
+            </div>
+            <div class="about-content">
+                <h2>About YourCare Health</h2>
+                <p>At YourCare Health, we believe in a holistic approach to patient well-being. Our state-of-the-art facility is equipped with the latest technology, and our team of highly skilled professionals is dedicated to providing personalized and compassionate care.</p>
+                <p>We are committed to fostering a healthy community by offering a wide range of medical services designed to meet your family's needs at every stage of life.</p>
+                <a href="about-us.html" class="btn-learn-more">Learn More About Us</a> <!-- Updated to go to about-us -->
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2023 YourCare Health. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="privacy-policy.html">Privacy Policy</a> <!-- Updated -->
+                <a href="terms-of-service.html">Terms of Service</a> <!-- Updated -->
+                <a href="#">Sitemap</a> <!-- Placeholder for now -->
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

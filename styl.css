@@ -1,0 +1,292 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f7f6; /* Light background */
+    color: #333;
+    line-height: 1.6;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px 0;
+}
+
+/* Header */
+header {
+    background-color: #fff;
+    padding: 15px 0;
+    border-bottom: 1px solid #eee;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 28px;
+    font-weight: bold;
+    color: #007bff; /* Primary blue */
+    text-decoration: none;
+}
+
+nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+nav ul li {
+    margin-left: 25px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #555;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+nav ul li a:hover {
+    color: #007bff;
+}
+
+.auth-buttons {
+    display: flex;
+    gap: 15px;
+}
+
+.auth-buttons .btn {
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.auth-buttons .btn-primary {
+    background-color: #007bff;
+    color: white;
+    border: none;
+}
+
+.auth-buttons .btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.auth-buttons .btn-secondary {
+    background-color: #f0f0f0;
+    color: #007bff;
+    border: 1px solid #007bff;
+}
+
+.auth-buttons .btn-secondary:hover {
+    background-color: #e0e0e0;
+}
+
+
+/* Form specific styles (for login/register pages) */
+.form-card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    padding: 40px;
+    width: 100%;
+    max-width: 450px;
+    margin: 80px auto; /* Center the card vertically and horizontally */
+    text-align: center;
+}
+
+.form-card h2 {
+    color: #007bff;
+    margin-bottom: 30px;
+    font-size: 2em;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #555;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="password"],
+.form-group input[type="date"] {
+    width: calc(100% - 20px); /* Account for padding */
+    padding: 12px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    box-sizing: border-box; /* Include padding in element's total width and height */
+}
+
+.form-card button[type="submit"] {
+    background-color: #28a745; /* Green for submit/action */
+    color: white;
+    padding: 14px 25px;
+    border: none;
+    border-radius: 5px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%;
+    margin-top: 15px;
+}
+
+.form-card button[type="submit"]:hover {
+    background-color: #218838;
+}
+
+.form-card .link-text {
+    margin-top: 20px;
+    font-size: 15px;
+    color: #666;
+}
+
+.form-card .link-text a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.form-card .link-text a:hover {
+    text-decoration: underline;
+}
+
+/* 🔹 Background Slideshow for Hero Section (4 Images) */
+.hero {
+  position: relative;
+  color: white;
+  text-align: center;
+  padding-top:50px;
+  top:-20px;
+  padding: 100px 20px;
+  border-radius: 8px;
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+  background-position: center top 30px;
+  overflow: hidden;
+
+}
+.slideshow img {
+  position: absolute;
+  top: 0;    /* ensure aligned */
+  left: 0;   /* ensure aligned */
+  width: 100%;
+  height: 100%;
+  object-fit: cover;  /* maintain cover effect */
+  border-radius: 8px; /* match hero border */
+  opacity: 0;
+  animation: fade 10s infinite;
+}
+
+
+.slideshow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+
+/* Image timing */
+.slideshow img:nth-child(1) { animation-delay: 0s; }
+.slideshow img:nth-child(2) { animation-delay: 4s; }
+.slideshow img:nth-child(3) { animation-delay: 8s; }
+.slideshow img:nth-child(4) { animation-delay: 12s; }
+
+@keyframes fade {
+  0%   { opacity: 1; }
+  20%  { opacity: 1; }
+  25%  { opacity: 0; }
+  95%  { opacity: 0; }
+  100% { opacity: 1; }
+}
+.vision-mission {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  gap: 20px;
+  padding: 40px;
+  font-family: Arial, sans-serif;
+}
+
+.card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 30px 20px;
+  width: 280px;
+  text-align: center;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-5px); /* subtle hover effect */
+}
+
+.icon {
+  font-size: 40px;
+  margin-bottom: 15px;
+  color: #7a6ad8; /* purple shade like in your image */
+}
+
+.card h3 {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 12px;
+  color: #6a5acd;
+}
+
+.card p {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #333;
+}
+
+
+
+
+/* Footer */
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 30px 0;
+    margin-top: 50px;
+    font-size: 0.9em;
+}
+
+footer p {
+    margin: 0;
+}
+
+footer .footer-links a {
+    color: white;
+    text-decoration: none;
+    margin: 0 10px;
+}
+
+footer .footer-links a:hover {
+    text-decoration: underline;
+}

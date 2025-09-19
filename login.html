@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - YourCare Health</title>
+  <link rel="stylesheet" href="styl.css">
+  <style>
+    .role-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin: 15px 0 25px 0;
+    }
+    .role-btn {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #ccc;
+      background: #f5f5f5;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.3s ease;
+      font-weight: bold;
+      margin-right: 5px;
+      border-radius: 6px;
+    }
+    .role-btn:last-child { margin-right: 0; }
+    .role-btn.active { background: #007bff; color: white; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <a href="index.html" class="logo" style="display:flex; align-items:center; gap:10px; text-decoration:none;">
+        <img src="logo.webp" alt="MediTech Logo" style="height:70px;">
+        <span style="font-size:1.5em; font-weight:bold; color:#007bff;">MediTech</span>
+      </a>
+      <div class="auth-buttons">
+        <a href="registerr.html" class="btn btn-secondary">Register</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="form-card">
+      <h2>Login to Your Account</h2>
+
+      <!-- Role buttons below heading -->
+      <div class="role-buttons">
+        <div class="role-btn active" data-role="patient">Patient</div>
+        <div class="role-btn" data-role="doctor">Doctor</div>
+        <div class="role-btn" data-role="pharmacy">Pharmacy</div>
+      </div>
+
+      <form id="loginForm">
+        <input type="hidden" id="role" value="patient">
+
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" required>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" required>
+        </div>
+
+        <p style="text-align:right; margin-top:-10px;">
+          <span style="color:#007bff; cursor:pointer;" id="forgotPassword">Forgot Password?</span>
+        </p>
+
+        <button type="submit" id="loginBtn">Login (Patient)</button>
+      </form>
+
+      <p class="link-text">Don't have an account? <a href="registerr.html">Register now</a></p>
+      <div id="note" style="margin-top:10px;"></div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2023 YourCare Health. All rights reserved.</p>
+      <div class="footer-links">
+        <a href="privacy-policy.html">Privacy Policy</a>
+        <a href="terms-of-service.html">Terms of Service</a>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAouRcoDjAVMNZmUkePlzNxUHD6DXxbxco",
+      authDomain: "meditech-83cbc.firebaseapp.com",
+      projectId: "meditech-83cbc",
+      storageBucket: "meditech-83cbc.appspot.com",
+      messagingSenderId: "687068515209",
+      appId: "1:687068515209:web:c4d007ce8abfc4fcb76f58",
+      measurementId: "G-3RY3F1152F",
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    const loginForm = document.getElementById("loginForm");
+    const note = document.getElementById("note");
+    const roleButtons = document.querySelectorAll(".role-btn");
+    const roleInput = document.getElementById("role");
+    const loginBtn = document.getElementById("loginBtn");
+    const forgotPasswordBtn = document.getElementById("forgotPassword");
+
+    // Role button click
+    roleButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        roleButtons.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+
+        const selectedRole = btn.getAttribute("data-role");
+        roleInput.value = selectedRole;
+
+        loginBtn.textContent = `Login (${selectedRole.charAt(0).toUpperCase() + selectedRole.slice(1)})`;
+      });
+    });
+
+    // Login
+    loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+      const role = roleInput.value;
+
+      try {
+        const cred = await signInWithEmailAndPassword(auth, email, password);
+        await cred.user.reload();
+
+        if(role === "patient" && !cred.user.emailVerified){
+          note.innerHTML = "<p style='color:red'>Please verify your email before login.</p>";
+          await signOut(auth);
+          return;
+        }
+
+        note.innerHTML = "<p style='color:green'>Login successful! Redirecting...</p>";
+        if(role === "patient") window.location.href = "patient-dashboard.html";
+        else if(role === "doctor") window.location.href = "doctor-dashboard.html";
+        else window.location.href = "pharmacy-dashboard.html";
+
+      } catch(err){
+        note.innerHTML = "<p style='color:red'>" + err.message + "</p>";
+      }
+    });
+
+    // Forgot Password
+    forgotPasswordBtn.addEventListener("click", async () => {
+      const email = document.getElementById("email").value.trim();
+      if(!email){
+        note.innerHTML = "<p style='color:red'>Please enter your email first.</p>";
+        return;
+      }
+      try{
+        await sendPasswordResetEmail(auth, email);
+        note.innerHTML = "<p style='color:green'>Password reset email sent! Check your inbox.</p>";
+      } catch(err){
+        note.innerHTML = "<p style='color:red'>" + err.message + "</p>";
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - YourCare Health</title>
+    <link rel="stylesheet" href="styl.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <a href="index.html" class="logo" style="display:flex; align-items:center; gap:10px; text-decoration:none;">
+                <img src="logo.webp" alt="MediTech Logo" style="height:70px;">
+                <span style="font-size:1.5em; font-weight:bold; color:#007bff;">MediTech</span>
+            </a> 
+            <div class="auth-buttons">
+                <a href="login.html" class="btn btn-primary">Login</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="form-card">
+            <h2>Create Your Account</h2>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="fullName">Full Name</label>
+                    <input type="text" id="fullName" name="fullName" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="dob">Date of Birth</label>
+                    <input type="date" id="dob" name="dob" required>
+                </div>
+                <div class="form-group">
+                    <input type="checkbox" id="terms" name="terms" required>
+                    <label for="terms" style="display: inline; margin-left: 10px;">
+                        I agree to the <a href="terms-of-service.html">Terms of Service</a> and <a href="privacy-policy.html">Privacy Policy</a>
+                    </label>
+                </div>
+                <button type="submit">Register</button>
+            </form>
+            <p class="link-text">Already have an account? <a href="login.html">Login here</a></p>
+            <div id="note" style="margin-top:10px;"></div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2023 YourCare Health. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="privacy-policy.html">Privacy Policy</a>
+                <a href="terms-of-service.html">Terms of Service</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Firebase -->
+    <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { getFirestore, setDoc, doc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAouRcoDjAVMNZmUkePlzNxUHD6DXxbxco",
+      authDomain: "meditech-83cbc.firebaseapp.com",
+      projectId: "meditech-83cbc",
+      storageBucket: "meditech-83cbc.appspot.com",
+      messagingSenderId: "687068515209",
+      appId: "1:687068515209:web:c4d007ce8abfc4fcb76f58",
+      measurementId: "G-3RY3F1152F",
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const registerForm = document.getElementById("registerForm");
+    const note = document.getElementById("note");
+
+    registerForm.addEventListener("submit", async (e) => {
+        e.preventDefault(); // prevent form submission
+
+        const fullName = document.getElementById("fullName").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value;
+        const confirmPassword = document.getElementById("confirmPassword").value;
+        const dob = document.getElementById("dob").value;
+
+        if(password !== confirmPassword){
+            note.innerHTML = "<p style='color:red'>Passwords do not match</p>";
+            return;
+        }
+
+        try {
+            const cred = await createUserWithEmailAndPassword(auth, email, password);
+            await setDoc(doc(db, "patients", cred.user.uid), {
+                fullName, email, dob, role: "patient", createdAt: serverTimestamp()
+            });
+            await sendEmailVerification(cred.user);
+            note.innerHTML = "<p style='color:green'>Registered! Please check your email to verify before login.</p>";
+            registerForm.reset();
+        } catch (err) {
+            note.innerHTML = "<p style='color:red'>" + err.message + "</p>";
+        }
+    });
+    </script>
+</body>
+</html>
