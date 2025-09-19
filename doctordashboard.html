@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Doctor Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #f4f7fb;
+      color: #333;
+    }
+    header {
+      background: #007bff;
+      color: white;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    h1 { margin: 0; font-size: 22px; }
+    button.logout {
+      background: #dc3545;
+      border: none;
+      color: white;
+      padding: 8px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button.logout:hover { background: #a71d2a; }
+
+    .container { padding: 20px; }
+    h2 { margin-top: 30px; font-size: 20px; }
+
+    .patient-list {
+      display: grid;
+      gap: 15px;
+      margin-top: 10px;
+    }
+    .card {
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }
+    .card h3 { margin: 0 0 8px; color: #007bff; }
+    .meta { font-size: 14px; color: #555; margin-bottom: 6px; }
+    .symptoms { background: #f1f1f1; padding: 10px; border-radius: 6px; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Doctor Dashboard</h1>
+    <button class="logout" id="logoutBtn">Logout</button>
+  </header>
+
+  <div class="container">
+    <h2>🆕 New Patients</h2>
+    <div id="newPatients" class="patient-list"></div>
+
+    <h2>📋 Ongoing Patients</h2>
+    <div id="ongoingPatients" class="patient-list"></div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { getFirestore, collection, query, orderBy, onSnapshot, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAouRcoDjAVMNZmUkePlzNxUHD6DXxbxco",
+      authDomain: "meditech-83cbc.firebaseapp.com",
+      projectId: "meditech-83cbc",
+      storageBucket: "meditech-83cbc.appspot.com",
+      messagingSenderId: "687068515209",
+      appId: "1:687068515209:web:c4d007ce8abfc4fcb76f58"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const newPatientsEl = document.getElementById("newPatients");
+    const ongoingPatientsEl = document.getElementById("ongoingPatients");
+
+    function renderCard(patient, type="new") {
+      const div = document.createElement("div");
+      div.className = "card";
+      div.innerHTML = `
+        <h3>${patient.name || "Unnamed Patient"}</h3>
+        <div class="meta">Age: ${patient.age || "N/A"} | Gender: ${patient.gender || "N/A"}</div>
+        <div class="meta">Category: ${patient.category || "-"} | Department: ${patient.department || "-"}</div>
+        <div class="symptoms">${patient.summary || patient.symptoms || "No symptoms available"}</div>
+      `;
+      if (type === "new") newPatientsEl.appendChild(div);
+      else ongoingPatientsEl.appendChild(div);
+    }
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) { window.location.href = "login.html"; return; }
+
+      // Listen for new patient notifications
+      const q = query(collection(db, "notifications"), orderBy("createdAt", "desc"));
+      onSnapshot(q, async (snapshot) => {
+        newPatientsEl.innerHTML = "";
+        ongoingPatientsEl.innerHTML = "";
+
+        for (const docSnap of snapshot.docs) {
+          const notif = docSnap.data();
+          const patientSnap = await getDoc(doc(db, "patients", notif.patientId));
+          if (patientSnap.exists()) {
+            const data = patientSnap.data();
+            // if patient assigned -> ongoing, else new
+            if (data.assignedDoctor) renderCard(data, "ongoing");
+            else renderCard(data, "new");
+          }
+        }
+      });
+    });
+
+    document.getElementById("logoutBtn").addEventListener("click", async () => {
+      await signOut(auth);
+      window.location.href = "login.html";
+    });
+  </script>
+</body>
+</html>
