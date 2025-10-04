@@ -12,7 +12,7 @@ Patient login & symptom entry
 
 Symptom classification (General → System-specific → Psychological)
 
-Doctor notifications                  
+Doctor notifications                                                      
 
 Digital prescriptions for pharmacy
                                                                   
