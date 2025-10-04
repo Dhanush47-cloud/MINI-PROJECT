@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book Appointment</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      background: #fff;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      width: 350px;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    input, select, textarea, button {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+    }
+    button {
+      background: #28a745;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #218838;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Book Appointment</h2>
+
+  <textarea id="symptoms" placeholder="Enter your symptoms"></textarea>
+
+  <select id="doctor">
+    <option value="">Select Doctor</option>
+    <option value="doctor1">Dr. Smith (Cardiologist)</option>
+    <option value="doctor2">Dr. Brown (Dermatologist)</option>
+    <option value="doctor3">Dr. Lee (Neurologist)</option>
+  </select>
+
+  <input type="date" id="date">
+  <input type="time" id="time">
+
+  <button onclick="bookAppointment()">Book Appointment</button>
+</div>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+
+<script>
+  // 🔹 Firebase Config (replace with your Firebase project keys)
+  const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_PROJECT_ID.appspot.com",
+    messagingSenderId: "YOUR_SENDER_ID",
+    appId: "YOUR_APP_ID"
+  };
+
+  // Initialize Firebase
+  const app = firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+
+  // Book Appointment Function
+  async function bookAppointment() {
+    const symptoms = document.getElementById("symptoms").value;
+    const doctorId = document.getElementById("doctor").value;
+    const date = document.getElementById("date").value;
+    const time = document.getElementById("time").value;
+
+    if (!symptoms || !doctorId || !date || !time) {
+      alert("Please fill all fields!");
+      return;
+    }
+
+    try {
+      // Save appointment to Firestore
+      await db.collection("appointments").add({
+        patientId: "demoPatient123",  // replace with logged-in patient ID
+        doctorId: doctorId,
+        symptoms: symptoms,
+        date: date,
+        time: time,
+        status: "upcoming",
+        createdAt: new Date()
+      });
+
+      // Notification for doctor
+      await db.collection("notifications").add({
+        doctorId: doctorId,
+        message: "New appointment booked",
+        timestamp: new Date()
+      });
+
+      alert("Appointment booked successfully!");
+    } catch (error) {
+      console.error("Error booking appointment: ", error);
+    }
+  }
+</script>
+
+</body>
+</html>

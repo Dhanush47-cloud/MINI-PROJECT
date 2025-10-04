@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Patient Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    /* Google font import */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+    /* Reset and base */
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Inter', Arial, sans-serif;
+      background: #f4f7fa;
+      margin: 0;
+      padding: 40px 15px;
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+      color: #333;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Container for dashboard */
+    .container {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+      max-width: 720px;
+      width: 100%;
+      padding: 30px 40px 40px;
+    }
+
+    /* Header */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      border-bottom: 1px solid #e0e6ed;
+      padding-bottom: 15px;
+    }
+    header h1 {
+      font-weight: 600;
+      font-size: 26px;
+      color: #2c3e50;
+      margin: 0;
+    }
+    button.logout {
+      background: #e74c3c;
+      border: none;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 600;
+      box-shadow: 0 4px 10px rgba(231,76,60,0.3);
+      transition: background-color 0.3s ease;
+      letter-spacing: 0.02em;
+    }
+    button.logout:hover {
+      background: #c0392b;
+    }
+
+    /* Form */
+    form {
+      width: 100%;
+    }
+    h2 {
+      font-weight: 600;
+      font-size: 22px;
+      color: #34495e;
+      margin-bottom: 25px;
+      border-left: 5px solid #3498db;
+      padding-left: 12px;
+    }
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 8px;
+      margin-top: 20px;
+      color: #34495e;
+      user-select: none;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 12px 15px;
+      border-radius: 8px;
+      border: 1.8px solid #d1d9e6;
+      font-size: 15px;
+      color: #2c3e50;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      font-family: inherit;
+      resize: vertical;
+    }
+    input::placeholder, textarea::placeholder {
+      color: #95a5a6;
+      font-style: italic;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: #3498db;
+      box-shadow: 0 0 8px rgba(52, 152, 219, 0.35);
+      outline: none;
+    }
+
+    /* Buttons */
+    button.save-btn {
+      margin-top: 30px;
+      background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+      color: white;
+      padding: 14px 0;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 17px;
+      font-weight: 700;
+      width: 100%;
+      box-shadow: 0 6px 16px rgba(41, 128, 185, 0.4);
+      letter-spacing: 0.03em;
+      transition: background 0.3s ease;
+      user-select: none;
+    }
+    button.save-btn:hover {
+      background: linear-gradient(135deg, #2980b9 0%, #2471a3 100%);
+    }
+
+    /* Success message */
+    .success-message {
+      color: #27ae60;
+      margin-top: 18px;
+      text-align: center;
+      font-weight: 600;
+      font-size: 16px;
+      user-select: none;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      display: block;
+    }
+    .success-message.show {
+      opacity: 1;
+    }
+
+    /* Chatbot */
+    #chatbot {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 360px;
+      max-height: 520px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+      border-radius: 16px;
+      background: white;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      font-family: 'Inter', Arial, sans-serif;
+      z-index: 1100;
+      transition: height 0.3s ease;
+      height: 500px;
+    }
+    #chatbotHeader {
+      background: #2980b9;
+      color: white;
+      padding: 12px 20px;
+      font-weight: 700;
+      font-size: 17px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+      letter-spacing: 0.03em;
+    }
+    #toggleChat {
+      font-size: 22px;
+      font-weight: 900;
+      line-height: 1;
+      color: #fefefe;
+      transition: color 0.3s ease;
+    }
+    #toggleChat:hover {
+      color: #d1d9e6;
+    }
+    #chatbotMessages {
+      flex: 1;
+      padding: 15px 20px;
+      overflow-y: auto;
+      background: #ecf0f1;
+      font-size: 15px;
+      line-height: 1.5;
+      display: block;
+    }
+    .chat-message {
+      margin-bottom: 12px;
+      max-width: 80%;
+      padding: 10px 14px;
+      border-radius: 20px;
+      line-height: 1.4;
+      word-wrap: break-word;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .chatbot-msg {
+      background: #3498db;
+      color: white;
+      align-self: flex-start;
+      font-weight: 600;
+    }
+    .user-msg {
+      background: #bdc3c7;
+      color: #2c3e50;
+      align-self: flex-end;
+      font-weight: 600;
+    }
+    #chatbotInput {
+      display: flex;
+      border-top: 1px solid #d1d9e6;
+      background: white;
+      padding: 12px 20px;
+    }
+    #chatInput {
+      flex: 1;
+      border: 1.5px solid #d1d9e6;
+      border-radius: 24px;
+      padding: 10px 18px;
+      font-size: 15px;
+      outline: none;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      font-family: inherit;
+    }
+    #chatInput:focus {
+      border-color: #2980b9;
+      box-shadow: 0 0 8px rgba(41, 128, 185, 0.4);
+    }
+    #sendBtn {
+      background: #2980b9;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 700;
+      margin-left: 12px;
+      border-radius: 24px;
+      box-shadow: 0 4px 14px rgba(41, 128, 185, 0.5);
+      transition: background-color 0.3s ease;
+      user-select: none;
+    }
+    #sendBtn:hover {
+      background: #1c598a;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      body {
+        padding: 20px 10px;
+      }
+      .container {
+        padding: 20px 25px 30px;
+        max-width: 100%;
+      }
+      #chatbot {
+        width: 90vw;
+        right: 5vw;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <header>
+      <h1>Welcome, <span id="userName">Loading...</span></h1>
+      <button class="logout" id="logoutBtn" aria-label="Logout from your account">Logout</button>
+    </header>
+
+    <form id="personalInfoForm" aria-label="Personal Information Form">
+      <h2>Personal Information</h2>
+
+      <label for="name">Name</label>
+      <input type="text" id="name" required autocomplete="name" placeholder="Your full name" />
+
+      <label for="age">Age</label>
+      <input type="number" id="age" min="0" max="120" required placeholder="Your age" />
+
+      <label for="gender">Gender</label>
+      <select id="gender" required>
+        <option value="" disabled selected>Select gender</option>
+        <option>Male</option>
+        <option>Female</option>
+        <option>Other</option>
+      </select>
+
+      <label for="address">Address</label>
+      <textarea id="address" rows="3" required placeholder="Your current address"></textarea>
+
+      <label for="contact">Contact Info</label>
+      <input type="text" id="contact" placeholder="Phone or Email" required autocomplete="tel email" />
+
+      <label for="medicalHistory">Medical History (allergies, chronic diseases, medications)</label>
+      <textarea id="medicalHistory" rows="4" placeholder="List your allergies, chronic diseases, medications..."></textarea>
+
+      <button type="submit" class="save-btn" aria-label="Save Personal Information">Save Personal Info</button>
+
+      <div class="success-message" id="successMsg" role="alert" aria-live="polite" style="opacity:0; display:block;">
+        &#10004; Info saved successfully!
+      </div>
+    </form>
+  </div> 
+
+  <!-- Chatbot Widget -->
+  <div id="chatbot" role="region" aria-label="HealthBot AI chatbot">
+    <div id="chatbotHeader" tabindex="0" aria-controls="chatbotMessages" aria-expanded="true" aria-label="Toggle chatbot window">
+      HealthBot AI <span id="toggleChat" style="cursor:pointer;" aria-hidden="true">&#x2715;</span>
+    </div>
+    <div id="chatbotMessages" tabindex="0"></div>
+    <div id="chatbotInput">
+      <input type="text" id="chatInput" placeholder="Ask me anything..." autocomplete="off" aria-label="Chat input" />
+      <button id="sendBtn" aria-label="Send message">Send</button>
+    </div>
+  </div>
+
+  <!-- Firebase and app scripts remain unchanged -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAouRcoDjAVMNZmUkePlzNxUHD6DXxbxco",
+      authDomain: "meditech-83cbc.firebaseapp.com",
+      projectId: "meditech-83cbc",
+      storageBucket: "meditech-83cbc.appspot.com",
+      messagingSenderId: "687068515209",
+      appId: "1:687068515209:web:c4d007ce8abfc4fcb76f58",
+      measurementId: "G-3RY3F1152F"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const userNameEl = document.getElementById("userName");
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    const form = document.getElementById("personalInfoForm");
+    const successMsg = document.getElementById("successMsg");
+
+    const nameInput = document.getElementById("name");
+    const ageInput = document.getElementById("age");
+    const genderInput = document.getElementById("gender");
+    const addressInput = document.getElementById("address");
+    const contactInput = document.getElementById("contact");
+    const medicalHistoryInput = document.getElementById("medicalHistory");
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        window.location.href = "login.html";
+        return;
+      }
+
+      userNameEl.textContent = user.email;
+
+      try {
+        const docRef = doc(db, "patients", user.uid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          nameInput.value = data.name || "";
+          ageInput.value = data.age || "";
+          genderInput.value = data.gender || "";
+          addressInput.value = data.address || "";
+          contactInput.value = data.contact || "";
+          medicalHistoryInput.value = data.medicalHistory || "";
+          if (data.name) userNameEl.textContent = data.name;
+        }
+      } catch (error) {
+        console.error("Error fetching patient data:", error);
+      }
+    });
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const user = auth.currentUser;
+      if (!user) return;
+
+      const data = {
+        name: nameInput.value.trim(),
+        age: parseInt(ageInput.value),
+        gender: genderInput.value,
+        address: addressInput.value.trim(),
+        contact: contactInput.value.trim(),
+        medicalHistory: medicalHistoryInput.value.trim(),
+        updatedAt: new Date()
+      };
+
+      try {
+       await setDoc(doc(db, "patients", user.uid), data, { merge: true });
+
+// Show success message quickly
+successMsg.classList.add("show");
+
+// Redirect to symptom entry page after 1.5 sec
+setTimeout(() => {
+  window.location.href = "s.html";
+}, 1500);
+
+      } catch (err) {
+        alert("Error saving info: " + err.message);
+      }
+    });
+
+    logoutBtn.addEventListener("click", async () => {
+      await signOut(auth);
+      window.location.href = "login.html";
+    });
+  </script>
+
+  <script>
+    const chatInput = document.getElementById("chatInput");
+    const sendBtn = document.getElementById("sendBtn");
+    const chatMessages = document.getElementById("chatbotMessages");
+    const toggleChat = document.getElementById("toggleChat");
+    const chatbot = document.getElementById("chatbot");
+    let isCollapsed = false;
+
+    toggleChat.addEventListener("click", () => {
+      isCollapsed = !isCollapsed;
+      if (isCollapsed) {
+        chatbot.style.height = "40px";
+        chatMessages.style.display = "none";
+        chatInput.parentElement.style.display = "none";
+        toggleChat.innerHTML = "&#x25B2;"; // up arrow to open
+        toggleChat.setAttribute("aria-label", "Expand chatbot window");
+      } else {
+        chatbot.style.height = "500px";
+        chatMessages.style.display = "block";
+        chatInput.parentElement.style.display = "flex";
+        toggleChat.innerHTML = "&#x2715;"; // cross to close
+        toggleChat.setAttribute("aria-label", "Close chatbot window");
+      }
+    });
+
+    function addMessage(text, sender = "chatbot-msg") {
+      const msgDiv = document.createElement("div");
+      msgDiv.className = "chat-message " + sender;
+      msgDiv.textContent = text;
+      chatMessages.appendChild(msgDiv);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function getBotResponse(msg) {
+      msg = msg.toLowerCase();
+
+      if (msg.includes("hello") || msg.includes("hi")) return "Hello! How can I help you today?";
+      if (msg.includes("appointment")) return "You can book appointments from the app or contact reception.";
+      if (msg.includes("medic")) return "For medications, please consult your doctor directly.";
+      if (msg.includes("thank")) return "You're welcome! 😊";
+      if (msg.trim() === "") return "Please type a message.";
+      return "Sorry, I didn't understand that. Can you rephrase?";
+    }
+
+    function sendMessage() {
+      const msg = chatInput.value.trim();
+      if (!msg) return;
+      addMessage(msg, "user-msg");
+      chatInput.value = "";
+      setTimeout(() => addMessage(getBotResponse(msg), "chatbot-msg"), 700);
+    }
+
+    sendBtn.addEventListener("click", sendMessage);
+    chatInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        sendMessage();
+      }
+    });
+  </script>
+
+</body>
+</html>
