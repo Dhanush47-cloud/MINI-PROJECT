@@ -17,7 +17,7 @@ Doctor notifications
 Digital prescriptions for pharmacy
                                                                   
 Chatbot for assistance & reminders
-
+                            
 ## 🛠️ Tech Stack
 
 Frontend: HTML, CSS, JavaScript (or React.js)
