@@ -9,7 +9,7 @@ A chatbot assists with queries, reminders, diet, and exercise suggestions.
 ## 🎯 Features                
 
                                             
-Patient login & symptom entry                      
+Patient login & symptom entry                                    
 
 Symptom classification (General → System-specific → Psychological)
 
